@@ -23,7 +23,7 @@ ext {
 apply plugin: 'java'
 apply plugin: 'maven'
 
-group = 'io.pivotal.gemfire'
+group = 'io.pivotal.field.gemfire'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
