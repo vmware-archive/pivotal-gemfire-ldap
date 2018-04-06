@@ -1,6 +1,6 @@
 # Yet Another GemFire Implementation for LDAP
 
-[![Build Status](https://travis-ci.org/Pivotal-Field-Engineering/pivotal-gemfire-ldap.svg?branch=master)](https://travis-ci.org/apache/geode) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Build Status](https://travis-ci.org/Pivotal-Field-Engineering/pivotal-gemfire-ldap.svg?branch=master)](https://travis-ci.org/Pivotal-Field-Engineering/pivotal-gemfire-ldap) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 YAG-LDAP or YAGI-LDAP - if you have a better name lets use it.
 
