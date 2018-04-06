@@ -12,8 +12,9 @@ jdk:
   - oraclejdk8
 
 env:
-  - GEMFIRE=$HOME/pivotal-gemfire-9.3.0
-  - PATH=$GEMFIRE/bin:$PATH
+   global:
+      - GEMFIRE=$HOME/pivotal-gemfire-9.3.0
+      - PATH=$GEMFIRE/bin:$PATH
 
 script:
   - gfsh version
