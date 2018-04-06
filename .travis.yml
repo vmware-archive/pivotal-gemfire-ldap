@@ -1,7 +1,8 @@
 language: java
 
 install:
-  - pushd ${HOME}
+  - pushd $HOME
+  - pwd
   - wget http://download.pivotal.com.s3.amazonaws.com/gemfire/9.3.0/pivotal-gemfire-9.3.0.zip
   - unzip pivotal-gemfire-9.3.0.zip
   - gfsh version
@@ -11,8 +12,8 @@ jdk:
   - oraclejdk8
 
 env:
-  - GEMFIRE=${HOME}/pivotal-gemfire-9.3.0
-  - PATH=${GEMFIRE}/bin:${PATH}
+  - GEMFIRE=$HOME/pivotal-gemfire-9.3.0
+  - PATH=$GEMFIRE/bin:$PATH
 
 script:
   - gfsh version
