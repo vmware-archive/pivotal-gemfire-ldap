@@ -4,6 +4,7 @@ install:
   - pushd ${HOME}
   - wget http://download.pivotal.com.s3.amazonaws.com/gemfire/9.3.0/pivotal-gemfire-9.3.0.zip
   - unzip pivotal-gemfire-9.3.0.zip
+  - gfsh version
   - popd
 
 jdk:
