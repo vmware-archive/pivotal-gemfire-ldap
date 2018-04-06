@@ -16,8 +16,8 @@
 package io.pivotal.gemfire.ldap;
 
 import org.apache.geode.internal.logging.LogService;
-import org.apache.geode.security.AuthenticationFailedException;
 import org.apache.logging.log4j.Logger;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -137,7 +137,7 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
             Collection<String> roles = getRoleNamesForUser((String) token.getPrincipal(), ctx);
             if (roles == null || roles.isEmpty()) {
                 logger.info("A user has attempted to log in and their user doesn't have the correct roles '" + principal + "'");
-                throw new AuthenticationFailedException("User has been authenticated, however doesn't have any GemFire roles - user -'" + principal + "'");
+                throw new AuthenticationException("User has been authenticated, however doesn't have any GemFire roles - user -'" + principal + "'");
             }
             return createAuthenticationInfo(token, principal, credentials, ctx);
         } finally {

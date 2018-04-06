@@ -109,3 +109,53 @@ GemFireGatewayManager = CLUSTER:MANAGE:GATEWAY
 ```
 [Example INI used in test ](src/test/resources/gf-ldap-shiro.ini)
 
+# How to build
+
+## SSL Key store and Trust stores
+
+Initially I was thinking about binding the servers to something other than local hosts - so I scripted the generation of the certs.   So that needs to run first on all hosts that are going to run the tests.   We need to generate certs for ``ldap`` and ``gemfire``.
+
+```
+<project home>/scripts/generateCerts.sh ldap
+<project home>/scripts/generateCerts.sh gemfire
+
+```
+
+The script will make a ``CA`` and sign a cert so it will closely emulate what I have seen at customer sites.
+
+The only thing I did that isn't common is I placed the key and trust in the same store.
+
+[The script to generate the certs](scripts/generateCerts.sh)
+
+##  Build & Test
+
+Since this is just an integration of two components I only made integration tests.
+
+When the test starts up it launches an LDAP server with a configuration that is known.    Then starts up GemFire configured to use that LDAP server and schema. At the end of the test everything is brought down.   
+
+Note the GemFire logs etc are not cleaned up so they can inspected.   Those artifacts are located in ``<project home>/data``.
+
+### The scripts to start GemFire for test
+
+
+* [Start GemFire and configure a region](src/test/scripts/startGeode.sh)
+* [Shutdown GemFire](src/test/scripts/shutdownGeode.sh)
+
+TIP: When powering off a GemFire system it is bad practice to stop each node independently.   In practice this emulates what failure actually looks as 1 by 1 is stopped and the other nodes are still running.   Now each node in the system will have a different "view" on who was in the distributed system so starting up is a pain.   
+
+It is best to ``shutdown`` the GemFire system using the ``gfsh shutdown`` command.    This will gracefully cause the GemFire systems to shutdown and will beable to accelerate start up because quorum can be established easily.
+
+### Build commands 
+```
+cd <project home>
+./gradlew clean build
+```
+
+After that the build artifacts that are needed are located in  ``<project home>/build/libs``.
+
+```
+Overall Coverage Summary 
+
+Package	      Class, %      Method, %         Line, %
+all classes	  100% (5/ 5)   73.5% (36/ 49)    75.9% (180/ 237)
+```
