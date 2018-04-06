@@ -1,5 +1,7 @@
 # Yet Another GemFire Implementation for LDAP
 
+[![Build Status](https://travis-ci.org/Pivotal-Field-Engineering/pivotal-gemfire-ldap.svg?branch=master)](https://travis-ci.org/apache/geode) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+
 YAG-LDAP or YAGI-LDAP - if you have a better name lets use it.
 
 **Why** - I was looking around for an LDAP GemFire implementation that allowed some level of customization and did not drag in a bunch of dependencies.   If we look at the dependency tree I think this project has hit the nail on the head - only GemFire.
