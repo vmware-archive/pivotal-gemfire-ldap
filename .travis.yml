@@ -15,6 +15,7 @@ env:
   - PATH=${GEMFIRE}/bin:${PATH}
 
 script:
+  - gfsh version
   - scripts/generateCerts.sh ldap
   - scripts/generateCerts.sh gemfire
   - ./gradlew clean build
