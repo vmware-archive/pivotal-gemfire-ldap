@@ -1,4 +1,4 @@
-# åYet Another GemFire Implementation for LDAP
+# Yet Another GemFire Implementation for LDAP
 
 YAG-LDAP or YAGI-LDAP - if you have a better name lets use it.
 
