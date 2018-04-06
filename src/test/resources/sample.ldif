@@ -1,0 +1,52 @@
+dn: dc=example,dc=com
+objectClass: domain
+objectClass: top
+dc: example
+
+dn: ou=Users,dc=example,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: Users
+
+dn: ou=Groups,dc=example,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: Groups
+
+
+dn: cn=GemFireDeveloper,ou=groups,dc=example,dc=com
+objectClass: groupOfUniqueNames
+objectClass: top
+ou: groups
+description: GemFire developers can read and write regions
+uniquemember: uid=cblack, ou=Users, dc=example,dc=com
+cn: GemFireDeveloper
+
+dn: cn=GemFireAdmin,ou=groups,dc=example,dc=com
+objectClass: groupOfUniqueNames
+objectClass: top
+ou: groups
+description: GemFire Administrators
+uniquemember: uid=cblack, ou=Users, dc=example,dc=com
+cn: GemFireAdmin
+
+dn: uid=cblack,ou=Users,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Charlie Black
+sn: Black
+uid: cblack
+userPassword: password1234
+
+
+dn: uid=operson,ou=Users,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Other Person
+sn: Person
+uid: operson
+userPassword: password1234

@@ -1,0 +1,58 @@
+/*
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
+ext {
+    gemfireVersion = '9.3.0'
+    apachedsVersion = '2.0.0-M24'
+    springShellVersion = '1.2.0.RELEASE'
+    junitVersion = '4.12'
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'io.pivotal.gemfire'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    maven {
+        url 'https://commercial-repo.pivotal.io/data3/gemfire-release-repo/gemfire'
+        credentials {
+            // Create a properties file in your local gradle.properties file.  This is typically at:
+            //   ~/.gradle/gradle.properties
+            username pivotalMavenUsername
+            password pivotalMavenPassword
+        }
+    }
+    mavenCentral()
+}
+
+configurations {
+    testCompile.exclude group: "org.apache.directory.api", module: "api-ldap-schema-data"
+}
+
+dependencies {
+    compile "io.pivotal.gemfire:geode-core:$gemfireVersion"
+    compile "io.pivotal.gemfire:geode-cq:$gemfireVersion"
+    compile "io.pivotal.gemfire:geode-wan:$gemfireVersion"
+    testCompile "org.springframework.shell:spring-shell:$springShellVersion"
+    testCompile "org.apache.directory.server:apacheds-all:$apachedsVersion"
+    testCompile "org.apache.directory.server:apacheds-server-integ:$apachedsVersion"
+    testCompile "org.apache.directory.server:apacheds-core-integ:$apachedsVersion"
+    testCompile "org.apache.directory.server:apacheds-server-jndi:$apachedsVersion"
+    testCompile "junit:junit:$junitVersion"
+}
+
