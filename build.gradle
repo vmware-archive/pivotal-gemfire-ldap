@@ -28,16 +28,10 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-    maven {
-        url 'https://commercial-repo.pivotal.io/data3/gemfire-release-repo/gemfire'
-        credentials {
-            // Create a properties file in your local gradle.properties file.  This is typically at:
-            //   ~/.gradle/gradle.properties
-            username pivotalMavenUsername
-            password pivotalMavenPassword
-        }
-    }
     mavenCentral()
+    maven {
+        url 'https://repo.spring.io/libs-release'
+    }
 }
 
 configurations {

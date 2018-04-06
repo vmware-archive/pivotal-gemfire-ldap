@@ -1,0 +1,19 @@
+language: java
+
+install:
+  - pushd ${HOME}
+  - wget http://download.pivotal.com.s3.amazonaws.com/gemfire/9.3.0/pivotal-gemfire-9.3.0.zip
+  - unzip pivotal-gemfire-9.3.0.zip
+  - popd
+
+jdk:
+  - oraclejdk8
+
+env:
+  - GEMFIRE=${HOME}/pivotal-gemfire-9.3.0
+  - PATH=${GEMFIRE}/bin:${PATH}
+
+script:
+  - scripts/generateCerts.sh ldap
+  - scripts/generateCerts.sh gemfire
+  - ./gradlew clean build
