@@ -60,7 +60,7 @@ The next section is setting up how to authenticate users on your LDAP and the im
 ````
 gemfireRealm = io.pivotal.gemfire.ldap.GemFireLDAPRealm
 gemfireRealm.ldapContextFactory = $contextFactory
-gemfireRealm.searchBase = "dc=example,dc=com"
+gemfireRealm.searchBase = dc=example,dc=com
 gemfireRealm.userDnTemplate = uid={0},ou=Users,dc=example,dc=com
 gemfireRealm.groupMemberAttribute=uniquemember
 ````
