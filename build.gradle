@@ -50,3 +50,16 @@ dependencies {
     testCompile "junit:junit:$junitVersion"
 }
 
+task generateCerts() {
+    doLast {
+        exec {
+            commandLine 'scripts/generateCerts.sh', 'gemfire'
+        }
+        exec {
+            commandLine 'scripts/generateCerts.sh', 'ldap'
+        }
+    }
+}
+tasks.test.dependsOn("generateCerts")
+
+

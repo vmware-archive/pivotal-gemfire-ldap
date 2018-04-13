@@ -22,6 +22,11 @@ then
   exit 1
 fi
 
+if [ -f "${APP_HOME}/certs/${1}.jks" ]
+then
+  exit 0
+fi
+
 mkdir -p ${APP_HOME}/certs
 cd   ${APP_HOME}/certs
 

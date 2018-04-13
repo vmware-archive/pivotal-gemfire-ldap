@@ -113,21 +113,15 @@ GemFireGatewayManager = CLUSTER:MANAGE:GATEWAY
 
 # How to build
 
+The build makes some assumtions about the build machine since it uses scripts to create SSL certs or start up other processes.   At this time the build needs to be executed on a linux or mac.  
+
 ## SSL Key store and Trust stores
 
-Initially I was thinking about binding the servers to something other than local hosts - so I scripted the generation of the certs.   So that needs to run first on all hosts that are going to run the tests.   We need to generate certs for ``ldap`` and ``gemfire``.
-
-```
-<project home>/scripts/generateCerts.sh ldap
-<project home>/scripts/generateCerts.sh gemfire
-
-```
-
-The script will make a ``CA`` and sign a cert so it will closely emulate what I have seen at customer sites.
-
-The only thing I did that isn't common is I placed the key and trust in the same store.
+As the test runs it generates certs.   Generatation of those certs can be seen in the following file:
 
 [The script to generate the certs](scripts/generateCerts.sh)
+
+The script will detect if a jks file exists and not regenerate the certs.   So if you need the certs to be regenerated then just remove the <project home>/certs directory.
 
 ##  Build & Test
 
