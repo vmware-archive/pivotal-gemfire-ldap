@@ -50,7 +50,6 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
     private String groupMemberAttribute = "uniquemember";
     private String groupNameAttribute = "cn";
     private String userDnTemplate = "uid={0},ou=users,dc=example,dc=com";
-    private String groupSearchBase = "ou=Groups,dc=example,dc=com";
     private String roleNamesDelimiter = ",";
     private Map<String, Collection<Permission>> rolesToPermission;
 
@@ -80,14 +79,6 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
 
     public void setGroupNameAttribute(String groupNameAttribute) {
         this.groupNameAttribute = groupNameAttribute;
-    }
-
-    public String getGroupSearchBase() {
-        return groupSearchBase;
-    }
-
-    public void setGroupSearchBase(String groupSearchBase) {
-        this.groupSearchBase = groupSearchBase;
     }
 
     public String getGroupMemberAttribute() {
@@ -229,7 +220,7 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
         String searchFilter = "(&(objectClass=*)(" + groupMemberAttribute + "=" + userDnTemplate + "))";
         Object[] searchArguments = new Object[]{userPrincipalName};
 
-        NamingEnumeration answer = ldapContext.search(groupSearchBase, searchFilter, searchArguments, searchCtls);
+        NamingEnumeration answer = ldapContext.search(searchBase, searchFilter, searchArguments, searchCtls);
 
         while (answer.hasMoreElements()) {
             SearchResult sr = (SearchResult) answer.next();
