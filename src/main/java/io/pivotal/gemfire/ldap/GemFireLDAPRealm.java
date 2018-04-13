@@ -47,9 +47,9 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
     private static final String USERDN_SUBSTITUTION_TOKEN = "{0}";
     private String userDnPrefix;
     private String userDnSuffix;
-    private String groupMemberAttribute = "uniquemember";
     private String groupNameAttribute = "cn";
-    private String userDnTemplate = "uid={0},ou=users,dc=example,dc=com";
+    private String userTemplate = "uid={0},ou=users,dc=example,dc=com";
+    private String groupTemplate = "(&(objectClass=*)(uid={0})";
     private String roleNamesDelimiter = ",";
     private Map<String, Collection<Permission>> rolesToPermission;
 
@@ -65,31 +65,15 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
     }
 
 
-    public String getRoleNamesDelimiter() {
-        return roleNamesDelimiter;
-    }
-
-    public void setRoleNamesDelimiter(String roleNamesDelimiter) {
-        this.roleNamesDelimiter = roleNamesDelimiter;
-    }
-
     public String getGroupNameAttribute() {
         return groupNameAttribute;
     }
 
-    public void setGroupNameAttribute(String groupNameAttribute) {
-        this.groupNameAttribute = groupNameAttribute;
+    public String getUserTemplate() {
+        return userTemplate;
     }
 
-    public String getGroupMemberAttribute() {
-        return groupMemberAttribute;
-    }
-
-    public void setGroupMemberAttribute(String groupMemberAttribute) {
-        this.groupMemberAttribute = groupMemberAttribute;
-    }
-
-    public void setUserDnTemplate(String template) throws IllegalArgumentException {
+    public void setUserTemplate(String template) throws IllegalArgumentException {
 
         if (!StringUtils.hasText(template)) {
             String msg = "User DN template cannot be null or empty.";
@@ -107,9 +91,29 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
         if (logger.isDebugEnabled()) {
             logger.debug("Determined user DN prefix [" + prefix + "] and suffix [" + suffix + "]");
         }
-        userDnTemplate = template;
+        userTemplate = template;
         this.userDnPrefix = prefix;
         this.userDnSuffix = suffix;
+    }
+
+    public String getRoleNamesDelimiter() {
+        return roleNamesDelimiter;
+    }
+
+    public void setRoleNamesDelimiter(String roleNamesDelimiter) {
+        this.roleNamesDelimiter = roleNamesDelimiter;
+    }
+
+    public void setGroupNameAttribute(String groupNameAttribute) {
+        this.groupNameAttribute = groupNameAttribute;
+    }
+
+    public String getGroupTemplate() {
+        return groupTemplate;
+    }
+
+    public void setGroupTemplate(String groupTemplate) {
+        this.groupTemplate = groupTemplate;
     }
 
     @Override
@@ -158,7 +162,7 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
         String prefix = getUserDnPrefix();
         String suffix = getUserDnSuffix();
         if (prefix == null && suffix == null) {
-            logger.debug("userDnTemplate property has not been configured, indicating the submitted " +
+            logger.debug("userTemplate property has not been configured, indicating the submitted " +
                     "AuthenticationToken's principal is the same as the User DN.  Returning the method argument " +
                     "as is.");
             return principal;
@@ -217,10 +221,9 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
         }
 
         //SHIRO-115 - prevent potential code injection:
-        String searchFilter = "(&(objectClass=*)(" + groupMemberAttribute + "=" + userDnTemplate + "))";
         Object[] searchArguments = new Object[]{userPrincipalName};
 
-        NamingEnumeration answer = ldapContext.search(searchBase, searchFilter, searchArguments, searchCtls);
+        NamingEnumeration answer = ldapContext.search(searchBase, groupTemplate, searchArguments, searchCtls);
 
         while (answer.hasMoreElements()) {
             SearchResult sr = (SearchResult) answer.next();

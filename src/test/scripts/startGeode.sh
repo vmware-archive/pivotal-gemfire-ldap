@@ -41,9 +41,9 @@ DEFAULT_JVM_OPTS="$DEFAULT_JVM_OPTS --J=-Dssl-truststore=${APP_HOME}/certs/gemfi
 DEFAULT_JVM_OPTS="$DEFAULT_JVM_OPTS --J=-Dssl-keystore=${APP_HOME}/certs/gemfire.jks"
 DEFAULT_JVM_OPTS="${DEFAULT_JVM_OPTS} --J=-Dgf-ldap-shiro-ini-file=${APP_HOME}/src/test/resources/gf-ldap-shiro.ini"
 DEFAULT_JVM_OPTS="${DEFAULT_JVM_OPTS} --J=-Dgf-ldap-security-file=${APP_HOME}/src/test/resources/gf-ldap-security.properties"
-DEFAULT_JVM_OPTS="${DEFAULT_JVM_OPTS} --locators=localhost[10334],localhost[10335]"
+DEFAULT_JVM_OPTS="${DEFAULT_JVM_OPTS} --locators=localhost[10334]"
 
-STD_SERVER_ITEMS="--server-port=0  --rebalance --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-server.properties"
+STD_SERVER_ITEMS="--server-port=0  --locator-wait-time=5 --rebalance --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-server.properties"
 
 mkdir -p ${APP_HOME}/data/locator1
 mkdir -p ${APP_HOME}/data/locator2
@@ -53,19 +53,15 @@ mkdir -p ${APP_HOME}/data/server3
 
 
 gfsh -e "start locator ${DEFAULT_LOCATOR_MEMORY} ${DEFAULT_JVM_OPTS} --name=locator1 --port=10334 --dir=${APP_HOME}/data/locator1 --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-locator.properties" &
-#gfsh -e "start locator ${DEFAULT_LOCATOR_MEMORY} ${DEFAULT_JVM_OPTS} --name=locator2 --port=10335 --dir=${APP_HOME}/data/locator2 --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-locator.properties" &
 
 wait
-export CLASSPATH=${APP_HOME}/build/libs/ldap-0.0.1-SNAPSHOT.jar
 
 start_server(){
     local serverName=server${1}
-    gfsh -e "connect --locator=localhost[10334] --key-store=${APP_HOME}/certs/gemfire.jks --key-store-password=changeit --trust-store=${APP_HOME}/certs/gemfire.jks --trust-store-password=changeit --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-server.properties --user=cblack --password=password1234 --use-ssl=true --ciphers=any --protocols=any" -e "start server ${DEFAULT_SERVER_MEMORY} ${DEFAULT_JVM_OPTS} --name=${serverName} --dir=${APP_HOME}/data/${serverName} ${STD_SERVER_ITEMS}" &
+    gfsh -e "start server ${DEFAULT_SERVER_MEMORY} ${DEFAULT_JVM_OPTS} --name=${serverName} --dir=${APP_HOME}/data/${serverName} ${STD_SERVER_ITEMS}" &
 }
 
 start_server 1
-#start_server 2
-#start_server 3
 
 wait
 

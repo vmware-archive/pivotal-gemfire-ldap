@@ -22,7 +22,6 @@ import org.apache.geode.security.ResourcePermission;
 import org.apache.geode.security.SecurityManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.config.Ini;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.support.DelegatingSubject;
 
@@ -52,7 +51,6 @@ public class GemFireLDAPSecurityManager implements SecurityManager {
         try {
             Properties properties = ToolBox.loadGFLDAPProperties();
             String shiroIniFile = properties.getProperty(ToolBox.GF_LDAP_SHIRO_INI_FILE);
-            logger.error("GemFire LDAP Shiro file is = " + shiroIniFile);
             if (logger.isDebugEnabled()) {
                 logger.debug("GemFire LDAP Shiro file is = " + shiroIniFile);
             }

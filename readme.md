@@ -53,16 +53,17 @@ contextFactory.environment[java.naming.security.protocol] = ssl
 The next section is setting up how to authenticate users on your LDAP and the implemention that we are going to use ``io.pivotal.gemfire.ldap.GemFireLDAPRealm``.   That bit of code is an extention of the Shiro ``ActiveDirectoryRealm``.   I extended that class since the ``ActiveDirectoryRealm`` had a concept of groups and mapped permissions to those groups.
 
 * searchBase - the distingished name where the search begins
-* userDnTemplate - the {0} gets replaced for finding the user.   Example to authenitcate a user id of ``cblack`` the code will query for ``uid=cblack,ou=Users,dc=example,dc=com``
-* groupMemberAttribute - This indicates the attribute to search for the user id
+* userTemplate - the {0} gets replaced for finding the user.   Example to authenitcate a user id of ``cblack`` the code will authenticate for ``uid=cblack,ou=Users,dc=example,dc=com``
 * groupNameAttribute - This is the attribute the group name would be under - the default is ``cn``
+* groupTemplate - the principal gets added in as the parameter to the template.   Example to authorize a "user" if of ``cblack`` the code will use the template and pass in a parameter of ``cblack`` to the search for the group the user belongs to.
 
 ````
 gemfireRealm = io.pivotal.gemfire.ldap.GemFireLDAPRealm
 gemfireRealm.ldapContextFactory = $contextFactory
-gemfireRealm.searchBase = dc=example,dc=com
-gemfireRealm.userDnTemplate = uid={0},ou=Users,dc=example,dc=com
-gemfireRealm.groupMemberAttribute=uniquemember
+gemfireRealm.searchBase = "dc=example,dc=com"
+gemfireRealm.userTemplate = uid={0},ou=Users,dc=example,dc=com
+gemfireRealm.groupTemplate = (&(objectClass=*)(uniquemember=uid={0},ou=Users,dc=example,dc=com))
+gemfireRealm.groupNameAttribute=cn
 ````
 It might make sense to see how above matches to how I setup the LDAP for the tests.   If you have another LDIF file that we should test out submit a ticket and we can work it in there.
 
