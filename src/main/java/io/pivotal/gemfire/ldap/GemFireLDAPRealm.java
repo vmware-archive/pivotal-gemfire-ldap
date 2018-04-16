@@ -255,8 +255,12 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
             List<String> split = Arrays.asList(e.getValue().split(roleNamesDelimiter));
             ArrayList<Permission> permissions = new ArrayList<>();
             split.forEach(s -> permissions.add(new WildcardPermission(s)));
-            mapping.put(e.getKey(), permissions);
+            mapping.put(fixGroupName(e.getKey()), permissions);
         });
         this.rolesToPermission = mapping;
+    }
+
+    private String fixGroupName(String groupName) {
+        return groupName.replaceAll("\\\\=", "=");
     }
 }

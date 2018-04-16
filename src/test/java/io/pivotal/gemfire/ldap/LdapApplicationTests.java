@@ -248,6 +248,29 @@ public class LdapApplicationTests {
     }
 
     @Test
+    public void specialGroupNameTest() {
+        setUpCache();
+        Properties properties = new Properties();
+        properties.setProperty(USER_NAME, "specialgroupname");
+        properties.setProperty(PASSWORD, "password1234");
+        Region test = clientCache.createAuthenticatedView(properties).getRegion("test");
+        System.out.println("test.get(1) = " + test.get(1));
+        test.put(1, "foo");
+    }
+
+    @Test
+    public void specialGroupNameTestInProc() {
+        GemFireLDAPSecurityManager gemFireLDAPSecurityManager = new GemFireLDAPSecurityManager();
+        gemFireLDAPSecurityManager.init(new Properties());
+
+        Properties properties = new Properties();
+        properties.setProperty(UserPasswordAuthInit.USER_NAME, "specialgroupname");
+        properties.setProperty(UserPasswordAuthInit.PASSWORD, "password1234");
+
+        Object principal = gemFireLDAPSecurityManager.authenticate(properties);
+        assertThat(gemFireLDAPSecurityManager.authorize(principal, new ResourcePermission(ResourcePermission.Resource.DATA, ResourcePermission.Operation.READ)), equalTo(true));
+    }
+    @Test
     public void gemfireIntegrationTest() throws InterruptedException, IOException {
         setUpCache();
         Properties properties = new Properties();

@@ -37,7 +37,17 @@ ou: groups
 description: Some Other Role
 uniquemember: uid=cblack, ou=Users, dc=example,dc=com
 uniquemember: uid=operson,ou=Users,dc=example,dc=com
+uniquemember: uid=specialgroupname,ou=Users,dc=example,dc=com
 cn: SomeOtherRole
+
+dn: cn=TheSpecial_GroupName,ou=groups,dc=example,dc=com
+objectClass: groupOfUniqueNames
+objectClass: top
+ou: groups
+description: The Special Group Name
+uniquemember: uid=specialgroupname,ou=Users,dc=example,dc=com
+cn: cn=TheSpecial_GroupName,ou=groups,dc=example,dc=com
+
 
 dn: uid=cblack,ou=Users,dc=example,dc=com
 objectClass: inetOrgPerson
@@ -58,4 +68,14 @@ objectClass: top
 cn: Other Person
 sn: Person
 uid: operson
+userPassword: password1234
+
+dn: uid=specialgroupname,ou=Users,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Other Person
+sn: Person
+uid: specialgroupname
 userPassword: password1234
