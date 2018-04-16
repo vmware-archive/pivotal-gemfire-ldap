@@ -31,6 +31,7 @@ import org.apache.geode.cache.client.ClientRegionShortcut;
 import org.apache.geode.cache.client.ServerOperationException;
 import org.apache.geode.security.ResourcePermission;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
@@ -221,7 +222,7 @@ public class LdapApplicationTests {
         assertThat(currentUser.isPermitted("CLUSTER:MANAGE:GATEWAY"), equalTo(true));
     }
 
-    @Test
+    @Test(expected = AuthenticationException.class)
     public void shiroNegativeTest() {
         SecurityManager securityManager = ToolBox.setupShiro("classpath:gf-ldap-shiro.ini");
 

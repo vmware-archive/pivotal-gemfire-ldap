@@ -131,7 +131,7 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
             ctx = ldapContextFactory.getLdapContext(principal, credentials);
             //context was opened successfully, which means their credentials were valid.  Return the AuthenticationInfo:
             Collection<String> roles = getRoleNamesForUser((String) token.getPrincipal(), ctx);
-            if ((roles == null || roles.isEmpty()) && !Collections.disjoint(roles, rolesToPermission.keySet())) {
+            if (roles == null || roles.isEmpty()) {
                 logger.info("A user has attempted to log in and their user doesn't have the correct roles '" + principal + "'");
                 throw new AuthenticationException("User has been authenticated, however doesn't have any GemFire roles - user -'" + principal + "'");
             }
@@ -237,7 +237,11 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
 
             if (attrs != null) {
                 Collection<String> groupNames = LdapUtils.getAllAttributeValues(attrs.get(groupNameAttribute));
-                roleNames.addAll(groupNames);
+                groupNames.forEach(name -> {
+                    if (rolesToPermission.containsKey(name)) {
+                        roleNames.add(name);
+                    }
+                });
             }
         }
         return roleNames;
