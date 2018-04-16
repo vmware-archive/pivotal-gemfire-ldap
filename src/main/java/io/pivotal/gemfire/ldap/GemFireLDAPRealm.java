@@ -39,6 +39,7 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GemFireLDAPRealm extends ActiveDirectoryRealm implements InitializeIniSection {
 
@@ -67,6 +68,10 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
 
     public String getGroupNameAttribute() {
         return groupNameAttribute;
+    }
+
+    public void setGroupNameAttribute(String groupNameAttribute) {
+        this.groupNameAttribute = groupNameAttribute;
     }
 
     public String getUserTemplate() {
@@ -104,10 +109,6 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
         this.roleNamesDelimiter = roleNamesDelimiter;
     }
 
-    public void setGroupNameAttribute(String groupNameAttribute) {
-        this.groupNameAttribute = groupNameAttribute;
-    }
-
     public String getGroupTemplate() {
         return groupTemplate;
     }
@@ -130,7 +131,7 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
             ctx = ldapContextFactory.getLdapContext(principal, credentials);
             //context was opened successfully, which means their credentials were valid.  Return the AuthenticationInfo:
             Collection<String> roles = getRoleNamesForUser((String) token.getPrincipal(), ctx);
-            if (roles == null || roles.isEmpty()) {
+            if ((roles == null || roles.isEmpty()) && !Collections.disjoint(roles, rolesToPermission.keySet())) {
                 logger.info("A user has attempted to log in and their user doesn't have the correct roles '" + principal + "'");
                 throw new AuthenticationException("User has been authenticated, however doesn't have any GemFire roles - user -'" + principal + "'");
             }
@@ -244,7 +245,7 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
 
     @Override
     public void initialize(Ini.Section section) {
-        Map<String, Collection<Permission>> mapping = new HashMap<>();
+        Map<String, Collection<Permission>> mapping = new ConcurrentHashMap<>();
 
         section.entrySet().forEach(e -> {
             List<String> split = Arrays.asList(e.getValue().split(roleNamesDelimiter));

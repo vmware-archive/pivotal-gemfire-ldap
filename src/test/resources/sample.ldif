@@ -30,6 +30,15 @@ description: GemFire Administrators
 uniquemember: uid=cblack, ou=Users, dc=example,dc=com
 cn: GemFireAdmin
 
+dn: cn=SomeOtherRole,ou=groups,dc=example,dc=com
+objectClass: groupOfUniqueNames
+objectClass: top
+ou: groups
+description: Some Other Role
+uniquemember: uid=cblack, ou=Users, dc=example,dc=com
+uniquemember: uid=operson,ou=Users,dc=example,dc=com
+cn: SomeOtherRole
+
 dn: uid=cblack,ou=Users,dc=example,dc=com
 objectClass: inetOrgPerson
 objectClass: organizationalPerson

@@ -31,12 +31,9 @@ import org.apache.geode.cache.client.ClientRegionShortcut;
 import org.apache.geode.cache.client.ServerOperationException;
 import org.apache.geode.security.ResourcePermission;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.Factory;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -224,7 +221,7 @@ public class LdapApplicationTests {
         assertThat(currentUser.isPermitted("CLUSTER:MANAGE:GATEWAY"), equalTo(true));
     }
 
-    @Test(expected = AuthenticationException.class)
+    @Test
     public void shiroNegativeTest() {
         SecurityManager securityManager = ToolBox.setupShiro("classpath:gf-ldap-shiro.ini");
 
@@ -262,6 +259,7 @@ public class LdapApplicationTests {
 
     @Test(expected = ServerOperationException.class)
     public void gemfireIntegrationTestFailNoPermissions() throws InterruptedException, IOException {
+        // The operson has a role - but the roles aren't in the roles to permissions mapping.
         setUpCache();
         Properties properties = new Properties();
         properties.setProperty(USER_NAME, "operson");
