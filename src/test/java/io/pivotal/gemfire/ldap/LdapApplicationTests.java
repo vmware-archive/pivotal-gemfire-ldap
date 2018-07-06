@@ -222,6 +222,18 @@ public class LdapApplicationTests {
         assertThat(currentUser.isPermitted("CLUSTER:MANAGE:GATEWAY"), equalTo(true));
     }
 
+    @Test
+    public void checkForClusterManage() {
+        SecurityManager securityManager = ToolBox.setupShiro("classpath:gf-ldap-shiro.ini");
+
+        UsernamePasswordToken token = new UsernamePasswordToken("clusterManage", "password1234");
+        Subject currentUser = SecurityUtils.getSubject();
+        currentUser.login(token);
+        ResourcePermission resourcePermission = new ResourcePermission("CLUSTER", "MANAGE");
+        assertThat(currentUser.hasRole("GemFireClusterManage"), equalTo(true));
+        assertThat(currentUser.isPermitted(resourcePermission), equalTo(true));
+    }
+
     @Test(expected = AuthenticationException.class)
     public void shiroNegativeTest() {
         SecurityManager securityManager = ToolBox.setupShiro("classpath:gf-ldap-shiro.ini");
@@ -231,7 +243,7 @@ public class LdapApplicationTests {
 
         currentUser.login(token);
         assertThat(currentUser.hasRole("GemFireDeveloper"), equalTo(false));
-        assertThat(currentUser.isPermitted("CLUSTER:MANAGE:GATEWAY"), equalTo(false));
+        assertThat(currentUser.isPermitted("CLUSTER:MANAGE"), equalTo(false));
     }
 
     @Test

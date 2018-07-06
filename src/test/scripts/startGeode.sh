@@ -45,6 +45,8 @@ DEFAULT_JVM_OPTS="${DEFAULT_JVM_OPTS} --locators=localhost[10334]"
 
 STD_SERVER_ITEMS="--server-port=0  --locator-wait-time=5 --rebalance --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-server.properties"
 
+rm -rf ${APP_HOME}/data/*
+
 mkdir -p ${APP_HOME}/data/locator1
 mkdir -p ${APP_HOME}/data/locator2
 mkdir -p ${APP_HOME}/data/server1

@@ -30,6 +30,14 @@ description: GemFire Administrators
 uniquemember: uid=cblack, ou=Users, dc=example,dc=com
 cn: GemFireAdmin
 
+dn: cn=GemFireClusterManage,ou=groups,dc=example,dc=com
+objectClass: groupOfUniqueNames
+objectClass: top
+ou: groups
+description: GemFire Cluster Manage
+uniquemember: uid=clusterManage, ou=Users, dc=example,dc=com
+cn: GemFireClusterManage
+
 dn: cn=SomeOtherRole,ou=groups,dc=example,dc=com
 objectClass: groupOfUniqueNames
 objectClass: top
@@ -78,4 +86,14 @@ objectClass: top
 cn: Other Person
 sn: Person
 uid: specialgroupname
+userPassword: password1234
+
+dn: uid=clusterManage,ou=Users,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Other Person
+sn: Person
+uid: clusterManage
 userPassword: password1234

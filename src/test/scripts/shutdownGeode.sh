@@ -23,6 +23,6 @@ cd "$SAVED" >&-
 # --J=-Dlog4j.configurationFile=${APP_HOME}/etc/log4j.xml
 
 
-gfsh -e "connect --locator=localhost[10334] --key-store=${APP_HOME}/certs/gemfire.jks --key-store-password=changeit --trust-store=${APP_HOME}/certs/gemfire.jks --trust-store-password=changeit --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-server.properties --user=cblack --password=password1234 --use-ssl=true --ciphers=any --protocols=any" -e "shutdown --include-locators=true"
+gfsh -e "connect --locator=localhost[10334] --key-store=${APP_HOME}/certs/gemfire.jks --key-store-password=changeit --trust-store=${APP_HOME}/certs/gemfire.jks --trust-store-password=changeit --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-server.properties --user=clusterManage --password=password1234 --use-ssl=true --ciphers=any --protocols=any" -e "shutdown --include-locators=true"
 
-rm -rf ${APP_HOME}/data/*
+#rm -rf ${APP_HOME}/data/*
