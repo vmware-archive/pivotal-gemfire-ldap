@@ -93,6 +93,35 @@ uid: cblack
 userPassword: password1234
 
 ```
+### Adding Caching To GemFire Realm
+
+Having the system use a LDAP server for every authorization and authentication operation the overall GemFire performance will take a hit.   To alleviate this performance burden there is a Shiro cache implementation backed by GemFire.    
+
+The cached LDAP information  is stored in a replicated region so the client can use any server and take advantage of the cached LDAP decision.    The storage for this information is in special management regions which are not accessible by users. 
+
+To configure Shiro we make the following changes to the `shiro.ini` file:
+
+```
+
+cacheManager = io.pivotal.gemfire.ldap.GemFireShiroCacheManager
+
+;;; entryTimeToLiveSeconds takes precedence over entryIdleTimeoutSeconds
+;;; Time is entered in seconds.  
+
+;;; entryTimeToLiveSeconds - The eviction timer starts as soon as the entry is placed into memory. 
+cacheManager.entryTimeToLiveSeconds = 500
+
+;;; entryIdleTimeoutSeconds - The eviction timer starts on last access time.
+;;;cacheManager.entryIdleTimeoutSeconds = 0
+
+;;; Set the cache manager on the Shiro Security Manager
+securityManager.cacheManager = $cacheManager
+...
+;;; Then we inform the gemfire realm that is to cache AA infomrmation.   
+;;; Note: "authenticationCachingEnabled" enables authorization caching.
+gemfireRealm.authenticationCachingEnabled=true
+```
+ 
 ### Role to Permission map
 
 The remainder of the ``INI`` file has the LDAP roles to permissions mapping.
