@@ -43,9 +43,8 @@ import org.junit.runner.RunWith;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
+import javax.naming.NamingException;
+import javax.naming.directory.*;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.SortControl;
@@ -56,6 +55,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import static org.apache.geode.management.internal.security.ResourceConstants.PASSWORD;
 import static org.apache.geode.management.internal.security.ResourceConstants.USER_NAME;
@@ -212,7 +212,7 @@ public class LdapApplicationTests {
 
     @Test
     public void shiroAdminAndDevUserTest() {
-        SecurityManager securityManager = ToolBox.setupShiro("classpath:gf-ldap-shiro.ini");
+        SecurityManager securityManager = ToolBox.setupShiro("classpath:inprocess-ldap-shiro.ini");
 
         UsernamePasswordToken token = new UsernamePasswordToken("cblack", "password1234");
         Subject currentUser = SecurityUtils.getSubject();
@@ -224,7 +224,7 @@ public class LdapApplicationTests {
 
     @Test
     public void checkForClusterManage() {
-        SecurityManager securityManager = ToolBox.setupShiro("classpath:gf-ldap-shiro.ini");
+        SecurityManager securityManager = ToolBox.setupShiro("classpath:inprocess-ldap-shiro.ini");
 
         UsernamePasswordToken token = new UsernamePasswordToken("clusterManage", "password1234");
         Subject currentUser = SecurityUtils.getSubject();
@@ -236,7 +236,7 @@ public class LdapApplicationTests {
 
     @Test(expected = AuthenticationException.class)
     public void shiroNegativeTest() {
-        SecurityManager securityManager = ToolBox.setupShiro("classpath:gf-ldap-shiro.ini");
+        SecurityManager securityManager = ToolBox.setupShiro("classpath:inprocess-ldap-shiro.ini");
 
         UsernamePasswordToken token = new UsernamePasswordToken("operson", "password1234");
         Subject currentUser = SecurityUtils.getSubject();
@@ -282,6 +282,7 @@ public class LdapApplicationTests {
         Object principal = gemFireLDAPSecurityManager.authenticate(properties);
         assertThat(gemFireLDAPSecurityManager.authorize(principal, new ResourcePermission(ResourcePermission.Resource.DATA, ResourcePermission.Operation.READ)), equalTo(true));
     }
+
     @Test
     public void gemfireIntegrationTest() throws InterruptedException, IOException {
         setUpCache();
@@ -320,6 +321,103 @@ public class LdapApplicationTests {
         test = clientCache.createAuthenticatedView(properties).getRegion("test");
         System.out.println("test.get(1) = " + test.get(1));
         test.put(1, "foo");
+    }
+
+    @Test
+    public void addGroup() throws NamingException {
+
+        clearLDAPCertEnv();
+        Hashtable env = createCommonJNDIEnv();
+        LdapContext ctx = (LdapContext) new InitialDirContext(env).lookup("ou=groups,dc=example,dc=com");
+
+        SecurityManager securityManager = ToolBox.setupShiro("classpath:inprocess-ldap-shiro.ini");
+
+        UsernamePasswordToken token = new UsernamePasswordToken("switchRoles", "password1234");
+        Subject currentUser = SecurityUtils.getSubject();
+
+        try {
+            currentUser.login(token);
+            assertThat(currentUser.hasRole("GemFireDeveloper"), equalTo(false));
+        } catch (AuthenticationException e) {
+            System.out.println("This is ok - " + e.getMessage());
+        }
+
+        ModificationItem[] mods = new ModificationItem[1];
+        mods[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE,
+                new BasicAttribute("uniquemember", "uid=switchRoles,ou=Users,dc=example,dc=com"));
+        ctx.modifyAttributes("cn=GemFireDeveloper", mods);
+
+        currentUser.login(token);
+        assertThat(currentUser.hasRole("GemFireDeveloper"), equalTo(true));
+
+        mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
+                new BasicAttribute("uniquemember", "uid=switchRoles,ou=Users,dc=example,dc=com"));
+        ctx.modifyAttributes("cn=GemFireDeveloper", mods);
+
+        try {
+            currentUser.login(token);
+            assertThat(currentUser.hasRole("GemFireDeveloper"), equalTo(false));
+        } catch (AuthenticationException e) {
+            System.out.println("This is ok - " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void addGroupTestCaching() throws NamingException {
+        setUpCache();
+        clearLDAPCertEnv();
+        Hashtable env = createCommonJNDIEnv();
+        LdapContext ctx = (LdapContext) new InitialDirContext(env).lookup("ou=groups,dc=example,dc=com");
+
+        ModificationItem[] mods = new ModificationItem[1];
+
+        try {
+            mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
+                    new BasicAttribute("uniquemember", "uid=switchRoles,ou=Users,dc=example,dc=com"));
+            ctx.modifyAttributes("cn=GemFireDeveloper", mods);
+        } catch (NamingException e) {
+            System.out.println("Make sure the user doesn't have permissions in LDAP");
+        }
+
+        Properties properties = new Properties();
+        properties.setProperty(USER_NAME, "switchRoles");
+        properties.setProperty(PASSWORD, "password1234");
+        Region test = null;
+        try {
+            test = clientCache.createAuthenticatedView(properties).getRegion("test");
+            System.out.println("test.get(1) = " + test.get(1));
+            test.put(1, "foo");
+        } catch (Exception e) {
+            System.out.println("should fail since the user doesn't have permission");
+        }
+        try {
+            // I don't like timing test - but not sure how to get the event that the data has been evicted from the "internal" regions.
+            // check the gf-ldap-shiro.ini file for eviction time I am just doing +1 to make sure the entry has been removed
+            Thread.sleep(TimeUnit.SECONDS.toMillis(2));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mods[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE,
+                new BasicAttribute("uniquemember", "uid=switchRoles,ou=Users,dc=example,dc=com"));
+        ctx.modifyAttributes("cn=GemFireDeveloper", mods);
+
+        try {
+            //don't wrap in a try catch because we should be authenticated
+            test = clientCache.createAuthenticatedView(properties).getRegion("test");
+            System.out.println("test.get(1) = " + test.get(1));
+            test.put(1, "foo");
+            try {
+                //this is just so I can see the output that the get will miss
+                Thread.sleep(TimeUnit.SECONDS.toMillis(2));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("test.get(1) = " + test.get(1));
+        } finally {
+            mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
+                    new BasicAttribute("uniquemember", "uid=switchRoles,ou=Users,dc=example,dc=com"));
+            ctx.modifyAttributes("cn=GemFireDeveloper", mods);
+        }
     }
 
     private synchronized void setUpCache() {

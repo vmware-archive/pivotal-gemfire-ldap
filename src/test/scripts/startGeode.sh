@@ -58,6 +58,8 @@ gfsh -e "start locator ${DEFAULT_LOCATOR_MEMORY} ${DEFAULT_JVM_OPTS} --name=loca
 
 wait
 
+gfsh -e "connect --locator=localhost[10334] --key-store=${APP_HOME}/certs/gemfire.jks --key-store-password=changeit --trust-store=${APP_HOME}/certs/gemfire.jks --trust-store-password=changeit --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-server.properties --user=cblack --password=password1234 --use-ssl=true --ciphers=any --protocols=any" -e "configure pdx --read-serialized=true"
+
 start_server(){
     local serverName=server${1}
     gfsh -e "start server ${DEFAULT_SERVER_MEMORY} ${DEFAULT_JVM_OPTS} --name=${serverName} --dir=${APP_HOME}/data/${serverName} ${STD_SERVER_ITEMS}" &
@@ -67,4 +69,4 @@ start_server 1
 
 wait
 
-gfsh -e "connect --locator=localhost[10334] --key-store=${APP_HOME}/certs/gemfire.jks --key-store-password=changeit --trust-store=${APP_HOME}/certs/gemfire.jks --trust-store-password=changeit --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-server.properties --user=cblack --password=password1234 --use-ssl=true --ciphers=any --protocols=any" -e "create region --name=test --type=PARTITION" -e "list memebers"
+gfsh -e "connect --locator=localhost[10334] --key-store=${APP_HOME}/certs/gemfire.jks --key-store-password=changeit --trust-store=${APP_HOME}/certs/gemfire.jks --trust-store-password=changeit --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-server.properties --user=cblack --password=password1234 --use-ssl=true --ciphers=any --protocols=any" -e "create region --name=test --type=PARTITION" -e "list members"

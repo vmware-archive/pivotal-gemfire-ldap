@@ -97,3 +97,13 @@ cn: Other Person
 sn: Person
 uid: clusterManage
 userPassword: password1234
+
+dn: uid=switchRoles,ou=Users,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Switching Roles
+sn: Person
+uid: switchRoles
+userPassword: password1234
