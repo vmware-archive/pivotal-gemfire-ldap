@@ -14,7 +14,7 @@ For SSL I provide a SSL socket factory implementation that allows the user to se
 
 Since customization is the keyword here you don't have to use the SSL implementation I have provided.
 
-###LDAP
+### LDAP
 
 For LDAP and the configuration I took my lead from Apache Shiro, which happens to be  GemFire's internal security mechanism.    I extended the Shiro ActiveDirectoryRealm to enable my implementation to map LDAP roles to Geode Permissions.  
 
