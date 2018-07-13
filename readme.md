@@ -117,9 +117,9 @@ cacheManager.entryTimeToLiveSeconds = 500
 ;;; Set the cache manager on the Shiro Security Manager
 securityManager.cacheManager = $cacheManager
 ...
-;;; Then we inform the gemfire realm that is to cache AA infomrmation.   
-;;; Note: "authenticationCachingEnabled" enables authorization caching.
+;;; Then we inform the gemfire realm that it will cache AA infomrmation.   
 gemfireRealm.authenticationCachingEnabled=true
+gemfireRealm.authorizationCachingEnabled=true
 ```
  
 ### Role to Permission map
