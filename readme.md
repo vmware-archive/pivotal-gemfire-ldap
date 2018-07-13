@@ -127,6 +127,8 @@ gemfireRealm.authorizationCachingEnabled=true
 The remainder of the ``INI`` file has the LDAP roles to permissions mapping.
 
 The INI Section name maps back to the name of the Shiro Realm.   I have added an extra interface tags Realms that need their Section to finish initialize.
+
+**Note:** Names are case sensitive.  
 ```
 ;;; Below is the mapping of the LDAP Roles to permissions in GemFire
 ;;; Feel free to get creative - check out all of the various permissions in the docs:
@@ -135,8 +137,8 @@ The INI Section name maps back to the name of the Shiro Realm.   I have added an
 
 [gemfireRealm]
 GemFireAdmin = *:*
-GemFireDeveloper = data:read,data:write
-GemFireReadOnly = data:read
+GemFireDeveloper = DATA:READ,DATA:WRITE
+GemFireReadOnly = DATA:READ
 GemFireGatewayManager = CLUSTER:MANAGE:GATEWAY
 ```
 [Example INI used in test ](src/test/resources/gf-ldap-shiro.ini)
