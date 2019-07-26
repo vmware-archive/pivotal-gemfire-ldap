@@ -9,7 +9,7 @@ install:
   - popd
 
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 env:
    global:
