@@ -187,3 +187,8 @@ Overall Coverage Summary
 Package	      Class, %      Method, %         Line, %
 all classes	  100% (5/ 5)   73.5% (36/ 49)    75.9% (180/ 237)
 ```
+# Looking for support
+
+This driver is supported by people like you **The GemFire community** and is not part of the GemFire product.    It is an extension that the services team uses at several customer instalations.   If you would ike to use it feel free to review and deploy at your own risk and GemFire support does not include this extension.
+  
+If you are you are looking for something more our services team is here to help.   Just ask your account exectuve that you need services help getting GemFire to work with your LDAP and they will connect you to the right team member.
