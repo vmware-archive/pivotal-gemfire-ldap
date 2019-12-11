@@ -187,8 +187,15 @@ Overall Coverage Summary
 Package	      Class, %      Method, %         Line, %
 all classes	  100% (5/ 5)   73.5% (36/ 49)    75.9% (180/ 237)
 ```
+
+## Discussion about tests
+
+The tests utilize a feature in GemFire called authenticated view.   It allows the developer run operations as a separate and distinct user then the application as a whole.   This allows the the application to establish a connection pool as the application, then the application can delegate authorization of the application user to GemFire.   
+
+Since we are testing authentication/authorization I thought authenticated views would be a great feature to use vs setting up and tearing down the connection pool for every test.   This way the developer can test many users in a given test and also allows the tests to complete faster since each test doesn't include the tear down and setup of the connection pool.
+ 
 # Looking for support
 
-This driver is supported by people like you **The GemFire community** and is not part of the GemFire product.    It is an extension that the services team uses at several customer instalations.   If you would ike to use it feel free to review and deploy at your own risk and GemFire support does not include this extension.
+This driver is supported by people like you **The GemFire community** and is not part of the GemFire product.    It is an extension that the services team uses at several customer installations.   If you would ike to use it feel free to review and deploy at your own risk and GemFire support does not include this extension.
   
 If you are you are looking for something more our services team is here to help.   Just ask your account exectuve that you need services help getting GemFire to work with your LDAP and they will connect you to the right team member.
