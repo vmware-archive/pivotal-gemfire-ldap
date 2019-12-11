@@ -209,7 +209,7 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
         return buildAuthorizationInfo(roleNames);
     }
 
-    private Set<String> getRoleNamesForUser(String username, LdapContext ldapContext) throws NamingException {
+    protected Set<String> getRoleNamesForUser(String username, LdapContext ldapContext) throws NamingException {
         Set<String> roleNames;
         roleNames = new LinkedHashSet<>();
 

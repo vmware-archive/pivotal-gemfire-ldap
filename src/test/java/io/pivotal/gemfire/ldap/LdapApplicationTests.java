@@ -29,6 +29,9 @@ import org.apache.geode.cache.client.ClientCache;
 import org.apache.geode.cache.client.ClientCacheFactory;
 import org.apache.geode.cache.client.ClientRegionShortcut;
 import org.apache.geode.cache.client.ServerOperationException;
+import org.apache.geode.cache.execute.FunctionException;
+import org.apache.geode.cache.execute.FunctionService;
+import org.apache.geode.cache.execute.ResultCollector;
 import org.apache.geode.security.ResourcePermission;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -53,6 +56,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -418,6 +422,30 @@ public class LdapApplicationTests {
                     new BasicAttribute("uniquemember", "uid=switchRoles,ou=Users,dc=example,dc=com"));
             ctx.modifyAttributes("cn=GemFireDeveloper", mods);
         }
+    }
+
+    @Test
+    public void tryAFunctionWithPermission() {
+        setUpCache();
+
+        Properties properties = new Properties();
+        properties.setProperty(USER_NAME, "cblack");
+        properties.setProperty(PASSWORD, "password1234");
+        Region test = clientCache.createAuthenticatedView(properties).getRegion("test");
+        ResultCollector collector = FunctionService.onRegion(test).execute(TestFunction.ID);
+        Collection results = (Collection) collector.getResult();
+    }
+
+    @Test(expected = FunctionException.class)
+    public void tryAFunctionWithoutPermission() {
+        setUpCache();
+
+        Properties properties = new Properties();
+        properties.setProperty(USER_NAME, "readOnly");
+        properties.setProperty(PASSWORD, "password1234");
+        Region test = clientCache.createAuthenticatedView(properties).getRegion("test");
+        ResultCollector collector = FunctionService.onRegion(test).execute(TestFunction.ID);
+        Collection results = (Collection) collector.getResult();
     }
 
     private synchronized void setUpCache() {

@@ -38,6 +38,14 @@ description: GemFire Cluster Manage
 uniquemember: uid=clusterManage, ou=Users, dc=example,dc=com
 cn: GemFireClusterManage
 
+dn: cn=GemFireReadOnly,ou=groups,dc=example,dc=com
+objectClass: groupOfUniqueNames
+objectClass: top
+ou: groups
+description: GemFire Read Only
+uniquemember: uid=readOnly, ou=Users, dc=example,dc=com
+cn: GemFireReadOnly
+
 dn: cn=SomeOtherRole,ou=groups,dc=example,dc=com
 objectClass: groupOfUniqueNames
 objectClass: top
@@ -106,4 +114,14 @@ objectClass: top
 cn: Switching Roles
 sn: Person
 uid: switchRoles
+userPassword: password1234
+
+dn: uid=readOnly,ou=Users,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Read Only
+sn: Only
+uid: readOnly
 userPassword: password1234

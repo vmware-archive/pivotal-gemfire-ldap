@@ -14,7 +14,7 @@
  */
 
 ext {
-    gemfireVersion = '9.3.0'
+    gemfireVersion = '9.9.0'
     apachedsVersion = '2.0.0-M24'
     springShellVersion = '1.2.0.RELEASE'
     junitVersion = '4.12'

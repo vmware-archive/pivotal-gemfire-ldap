@@ -31,7 +31,7 @@ DEFAULT_JVM_OPTS="$DEFAULT_JVM_OPTS --J=-XX:+ScavengeBeforeFullGC"
 DEFAULT_JVM_OPTS="$DEFAULT_JVM_OPTS --J=-XX:+CMSScavengeBeforeRemark"
 DEFAULT_JVM_OPTS="$DEFAULT_JVM_OPTS --J=-XX:+UseCompressedOops"
 DEFAULT_JVM_OPTS="$DEFAULT_JVM_OPTS --mcast-port=0"
-DEFAULT_JVM_OPTS="$DEFAULT_JVM_OPTS  --classpath=${APP_HOME}/build/libs/pivotal-gemfire-ldap-0.0.1-SNAPSHOT.jar"
+DEFAULT_JVM_OPTS="$DEFAULT_JVM_OPTS  --classpath=${APP_HOME}/build/libs/pivotal-gemfire-ldap-0.0.1-SNAPSHOT.jar:${APP_HOME}/build/classes/java/test"
 
 DEFAULT_JVM_OPTS="$DEFAULT_JVM_OPTS --J=-Dgf-ldap-ssl-keystore=${APP_HOME}/certs/ldap.jks"
 DEFAULT_JVM_OPTS="$DEFAULT_JVM_OPTS --J=-Dgf-ldap-ssl-truststore=${APP_HOME}/certs/ldap.jks"
@@ -58,7 +58,7 @@ gfsh -e "start locator ${DEFAULT_LOCATOR_MEMORY} ${DEFAULT_JVM_OPTS} --name=loca
 
 wait
 
-gfsh -e "connect --locator=localhost[10334] --key-store=${APP_HOME}/certs/gemfire.jks --key-store-password=changeit --trust-store=${APP_HOME}/certs/gemfire.jks --trust-store-password=changeit --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-server.properties --user=cblack --password=password1234 --use-ssl=true --ciphers=any --protocols=any" -e "configure pdx --read-serialized=true"
+gfsh -e "connect --locator=localhost[10334] --key-store=${APP_HOME}/certs/gemfire.jks --key-store-password=changeit --trust-store=${APP_HOME}/certs/gemfire.jks --trust-store-password=changeit --security-properties-file=${APP_HOME}/src/test/resources/gfsecurity-server.properties --user=cblack --password=password1234 --use-ssl=true --ciphers=any --protocols=any" -e "import cluster-configuration --xml-file=${APP_HOME}/src/test/resources/install-test-function.xml"
 
 start_server(){
     local serverName=server${1}

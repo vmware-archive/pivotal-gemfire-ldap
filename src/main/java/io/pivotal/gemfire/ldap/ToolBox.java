@@ -15,7 +15,6 @@
 
 package io.pivotal.gemfire.ldap;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.SecurityManager;
@@ -60,7 +59,7 @@ class ToolBox {
 
     private static Properties loadPropertiesFromCommonLocations(String userOverRide, String defaultFileName) throws IOException {
         Properties properties = new Properties();
-        if (StringUtils.isNotEmpty(userOverRide) && new File(userOverRide).exists()) {
+        if (userOverRide != null && !userOverRide.isEmpty() && new File(userOverRide).exists()) {
             log.debug("using user provided file");
             properties = new Properties();
             try (FileInputStream fileInputStream = new FileInputStream(userOverRide)) {
