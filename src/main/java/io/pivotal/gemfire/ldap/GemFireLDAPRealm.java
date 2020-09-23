@@ -20,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
@@ -144,7 +143,7 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
     protected AuthenticationInfo createAuthenticationInfo(AuthenticationToken token, Object ldapPrincipal,
                                                           Object ldapCredentials, LdapContext ldapContext)
             throws NamingException {
-        return new SimpleAuthenticationInfo(token.getPrincipal(), token.getCredentials(), getName());
+        return new GemFireAuthenticationInfo(token.getPrincipal(), token.getCredentials(), getName());
     }
 
     protected Object getLdapPrincipal(AuthenticationToken token) {
@@ -262,5 +261,10 @@ public class GemFireLDAPRealm extends ActiveDirectoryRealm implements Initialize
 
     private String fixGroupName(String groupName) {
         return groupName.replaceAll("\\\\=", "=");
+    }
+
+    protected Object getAuthenticationCacheKey(AuthenticationToken token) {
+        // I wanted to make the cached entity unique.
+        return new GemFireAuthenticationInfo(token.getPrincipal(), token.getCredentials(), getName());
     }
 }

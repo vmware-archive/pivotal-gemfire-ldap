@@ -28,6 +28,8 @@ Both INI files and Shiro are well documented so I will rely on those communities
 
 Lets walk through the test file which can be seen in it entirety at : [Example INI used in TEST](src/test/resources/gf-ldap-shiro.ini).
 
+NOTE: It is highly recommended to use TLS/SSL since the passwords are going to go over the network.
+
 ### Setup up the LDAP Connection
 
 In the following snippet we setup the Shiro implementation for JNDI.   The first line is basically saying instanciate this class and then set all of the these properties.

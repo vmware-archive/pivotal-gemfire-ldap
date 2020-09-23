@@ -299,6 +299,22 @@ public class LdapApplicationTests {
     }
 
     @Test(expected = ServerOperationException.class)
+    public void gemfireIntegrationTestFailCachedView() throws InterruptedException, IOException {
+        // The operson has a role - but the roles aren't in the roles to permissions mapping.
+        setUpCache();
+        Properties properties = new Properties();
+        properties.setProperty(USER_NAME, "cblack");
+        properties.setProperty(PASSWORD, "password1234");
+        Region test = clientCache.createAuthenticatedView(properties).getRegion("test");
+        System.out.println("test.get(1) = " + test.get(1));
+        test.put(1, "foo");
+        properties.setProperty(PASSWORD, "fail_password");
+        test = clientCache.createAuthenticatedView(properties).getRegion("test");
+        System.out.println("test.get(1) = " + test.get(1));
+        test.put(1, "foo");
+    }
+
+    @Test(expected = ServerOperationException.class)
     public void gemfireIntegrationTestFailNoPermissions() throws InterruptedException, IOException {
         // The operson has a role - but the roles aren't in the roles to permissions mapping.
         setUpCache();
@@ -391,6 +407,8 @@ public class LdapApplicationTests {
             test = clientCache.createAuthenticatedView(properties).getRegion("test");
             System.out.println("test.get(1) = " + test.get(1));
             test.put(1, "foo");
+            Integer foo;
+
         } catch (Exception e) {
             System.out.println("should fail since the user doesn't have permission");
         }
