@@ -1,4 +1,4 @@
-# Yet Another GemFire Implementation for LDAP
+<h1> VMware has ended active development of this project, this repository will no longer be updated.</h1><br># Yet Another GemFire Implementation for LDAP
 
 [![Build Status](https://travis-ci.org/Pivotal-Field-Engineering/pivotal-gemfire-ldap.svg?branch=master)](https://travis-ci.org/Pivotal-Field-Engineering/pivotal-gemfire-ldap) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
